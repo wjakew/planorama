@@ -114,7 +114,12 @@
     color: white;
     font-size: 0.75rem;
 }
-
+/* -------------admin page */
+.admin-page {
+    background: linear-gradient(135deg, rgb(60, 60, 60), black);
+    background-size: 200% 200%;
+    animation: spinning 40s linear infinite;
+}
 
 /* animations */
 @keyframes spinning {

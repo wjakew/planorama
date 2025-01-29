@@ -15,6 +15,7 @@ import com.vaadin.flow.server.VaadinSession;
 import com.jakubwawak.planorama.PlanoramaApplication;
 import com.jakubwawak.planorama.backend.entity.User;
 import com.jakubwawak.planorama.backend.services.LoginService;
+import com.jakubwawak.planorama.backend.ui.components.windows.windows_logged.SettingsWindow;
 
 
 /**
@@ -55,6 +56,12 @@ public class HeaderComponent extends HorizontalLayout{
             LoginService loginService = new LoginService();
             loginService.logoutUser(user);
             UI.getCurrent().navigate("/welcome");
+        });
+        
+        settings_button.addClickListener(e -> {
+            SettingsWindow settingsWindow = new SettingsWindow();
+            add(settingsWindow.main_dialog);
+            settingsWindow.main_dialog.open();
         });
 
         logout_button.getStyle().set("margin", "0 10px");

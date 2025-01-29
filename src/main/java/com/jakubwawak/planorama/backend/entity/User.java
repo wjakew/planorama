@@ -76,6 +76,10 @@ public class User {
         this.admin = true;
     }
 
+    public boolean isAdmin() {
+        return admin;
+    }
+
     public void setNormalUser() {
         this.admin = false;
     }

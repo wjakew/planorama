@@ -132,6 +132,28 @@ public class DatabaseUser {
     }
 
     /**
+     * Function for updating user
+     * @param user
+     * @return
+     */
+    public User updateUser(User user){
+        try{
+            int ans = database.update("application_users", user.getId(), user.toDocument());
+            if (ans == 1){
+                database.log("USER-UPDATE-SUCCESS", "User updated (" + user.getId() + ")");
+                return user;
+            }
+            else{
+                database.log("USER-UPDATE-FAILED", "Failed to update user (" + user.getId() + ")");
+                return null;
+            }
+        } catch (Exception e) {
+            database.log("USER-UPDATE-FAILED", e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Function for getting user by id
      * @param id
      * @return

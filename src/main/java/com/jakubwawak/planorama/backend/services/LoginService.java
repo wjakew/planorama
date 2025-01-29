@@ -86,4 +86,23 @@ public class LoginService {
         return databaseUser.getUserBySessionId(session_id);
     }   
 
+    /**
+     * Function for updating user password
+     * @param user
+     * @param password
+     * @return int
+     * 1 - success
+     * 0 - failed
+     */
+    public int updateUserPassword(User user, String password) {
+        user.setPassword(password);
+        User updated_user = databaseUser.updateUser(user);
+        if (updated_user != null){
+            PlanoramaApplication.database.log("USER-PASSWORD-UPDATE-SUCCESS", "User password updated (" + user.getId() + ")");
+            return 1;
+        }
+        PlanoramaApplication.database.log("USER-PASSWORD-UPDATE-FAILED", "Failed to update user password (" + user.getId() + ")");
+        return 0;
+    }
+
 }

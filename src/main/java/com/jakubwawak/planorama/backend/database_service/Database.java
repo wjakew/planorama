@@ -15,6 +15,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
 import com.mongodb.internal.bulk.DeleteRequest;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -123,6 +124,33 @@ public class Database {
             }
         } catch (MongoException ex) {
             log("DB-INSERT-ERROR", "Failed to insert document to collection (" + ex.toString() + ")");
+            return -1;
+        }
+    }
+
+    /**
+     * Function for updating document in collection
+     * @param collectionName
+     * @param id
+     * @param document
+     * @return int
+     * 1 - success
+     * 0 - failed
+     * -1 - error
+     */
+    public int update(String collectionName, ObjectId id, Document document) {
+        try{
+            UpdateResult result = getCollection(collectionName).updateOne(eq("_id", id), new Document("$set", document));
+            if (result.getModifiedCount() == 1){
+                log("DB-UPDATE", "Updated document in collection (" + id + ")");
+                return 1;
+            }
+            else{
+                log("DB-UPDATE-ERROR", "Failed to update document in collection (" + id + ")");
+                return 0;
+            }
+        } catch (Exception e) {
+            log("DB-UPDATE-ERROR", e.getMessage());
             return -1;
         }
     }

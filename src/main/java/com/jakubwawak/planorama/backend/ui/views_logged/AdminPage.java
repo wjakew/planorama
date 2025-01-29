@@ -3,53 +3,63 @@
  * kubawawak@gmail.com
  * all rights reserved
  */
-package com.jakubwawak.planorama.backend.ui;
+
+package com.jakubwawak.planorama.backend.ui.views_logged;
 
 import com.jakubwawak.planorama.PlanoramaApplication;
 import com.jakubwawak.planorama.backend.entity.User;
 import com.jakubwawak.planorama.backend.services.LoginService;
+import com.jakubwawak.planorama.backend.ui.components.HeaderComponent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.icon.VaadinIcon;
 
 /**
  * Dashboard page - main view for logged in users
  */
-@PageTitle("planorama. - Template")
-@Route("template-logged-view")
-public class TemplateLoggedView extends VerticalLayout {
+@PageTitle("planorama. - admin")
+@Route("admin")
+public class AdminPage extends VerticalLayout {
+
+    HeaderComponent headerComponent;
 
 
     LoginService loginService;
     User user;
 
-    Button return_button;
+    Button back_button;
     
     /**
      * Constructor
      */
-    public TemplateLoggedView() {
-        addClassName("template-logged-view");
-        if (VaadinSession.getCurrent().getAttribute("planorama_session_cookie") == null) {
-            return_button = new Button("Return to Login page");
-            return_button.addClassName("default-button");
-            return_button.addClickListener(e -> {
-                UI.getCurrent().navigate("/welcome");
-            });
-            add(new H1("planorama."), new H6("You are not logged in, please login to continue."), return_button);
+    public AdminPage() {
+        addClassName("admin-page");
+        String session_id = VaadinSession.getCurrent().getAttribute("planorama_session_cookie").toString();
+        if (session_id == null) {
+            add(new H1("Session expired, please login again."));
+            add(back_button);
         }
         else{
-            String session_id = VaadinSession.getCurrent().getAttribute("planorama_session_cookie").toString();
             loginService = new LoginService();
             user = loginService.getUserBySessionId(session_id);
+    
+            back_button = new Button("Back", VaadinIcon.ARROW_LEFT.create());
+            back_button.addClickListener(e -> {
+                UI.getCurrent().navigate("/dashboard");
+            });
             
             if (user != null) {
-                prepareLayout();
+                if (user.isAdmin()) {
+                    prepareLayout();
+                } else {
+                    add(new H1("You are not authorized to access this page."));
+                    add(back_button);
+                }
     
             } else {
                 PlanoramaApplication.database.log("USER-GET-BY-SESSION-ID", "User not found (session_id: " + session_id + ")");
@@ -58,10 +68,6 @@ public class TemplateLoggedView extends VerticalLayout {
                 UI.getCurrent().navigate("/welcome");
             }
         }
-
-        setSizeFull();
-        setJustifyContentMode(JustifyContentMode.CENTER);
-        setAlignItems(Alignment.CENTER);
     }
 
     /**
@@ -70,5 +76,7 @@ public class TemplateLoggedView extends VerticalLayout {
      */
     void prepareLayout() {
         // create layout for logged user
+        headerComponent = new HeaderComponent(user);
+        add(headerComponent);
     }
 }
