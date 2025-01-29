@@ -1,0 +1,87 @@
+@font-face {
+    font-family: 'planorama_font';
+    src: url('./NotoSerifTodhri-Regular.ttf');
+}
+@font-face {
+    font-family: 'planorama_secondary_font';
+    src: url('./CormorantGaramond-Bold.ttf');
+}
+
+/* input styles */
+.default-input {
+    --vaadin-text-field-background: rgb(255, 255, 255);
+    --vaadin-text-field-text-color: rgb(0, 0, 0);
+    --vaadin-input-field-label-color: black;
+    --vaadin-input-field-hovered-label-color: black;
+    --vaadin-input-field-focused-label-color: black;
+    --vaadin-focus-ring-color: white;
+    --vaadin-text-field-font-size: 1rem;
+    font-family: 'planorama_font';
+}
+
+/* button styles */
+.default-button {
+    --vaadin-button-background: rgb(63, 100, 63);
+    --vaadin-button-text-color: white;
+    --vaadin-button-font-size: 1rem;
+    font-family: 'planorama_secondary_font';
+}
+
+.primary-button {
+    --vaadin-button-background: rgb(49, 49, 100);
+    --vaadin-button-text-color: white;
+    --vaadin-button-font-size: 1rem;
+    font-family: 'planorama_secondary_font';
+}
+
+.secondary-button {
+    --vaadin-button-background: transparent;
+    --vaadin-button-text-color: white;
+    --vaadin-button-font-size: 1rem;
+    font-family: 'planorama_secondary_font';
+}
+
+/* component styles */
+/* -------------login component */
+.login-component {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    border: 1px solid rgb(255, 255, 255);
+}
+.login-component h1{
+    font-family: 'planorama_font';
+    color: white;
+    font-size: 5rem;
+}
+/* page styles */
+
+/* -------------welcome page */
+.welcome-page {
+    background: linear-gradient(135deg, rgb(60, 60, 60), black);
+    background-size: 200% 200%;
+    animation: spinning 40s linear infinite;
+}
+@keyframes spinning {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+.welcome-page h1 {
+    font-family: 'planorama_font';
+    color: white;
+    font-size: 5rem;
+}
+.welcome-page h6 {
+    color: white;
+    font-size: 0.75rem;
+    font-family: 'planorama_font';
+}
