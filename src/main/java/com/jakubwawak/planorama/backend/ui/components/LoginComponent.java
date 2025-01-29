@@ -7,6 +7,7 @@ package com.jakubwawak.planorama.backend.ui.components;
 
 import com.jakubwawak.planorama.PlanoramaApplication;
 import com.jakubwawak.planorama.backend.services.LoginService;
+import com.jakubwawak.planorama.backend.ui.components.windows.windows_anonymous.RegisterWindow;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -45,11 +46,13 @@ public class LoginComponent extends VerticalLayout {
     private void prepareComponents() {
         emailField = new TextField("Email");
         emailField.setWidth("100%");
+        emailField.setMaxLength(250);
         emailField.addClassName("default-input");
         emailField.setPlaceholder("cool@planorama.com");
 
         passwordField = new PasswordField("Password");
         passwordField.setWidth("100%");
+        passwordField.setMaxLength(150);
         passwordField.addClassName("default-input");
         passwordField.setPlaceholder("secretpassword");
 
@@ -57,8 +60,9 @@ public class LoginComponent extends VerticalLayout {
         loginButton.addClassName("default-button");
         loginButton.setWidth("100%");
 
-        registerButton = new Button("Register", VaadinIcon.PLUS.create());
+        registerButton = new Button("Register", VaadinIcon.PLUS.create(), this::registerButtonClick);
         registerButton.addClassName("primary-button");
+        registerButton.setWidth("50%");
     }
 
     /**
@@ -73,6 +77,16 @@ public class LoginComponent extends VerticalLayout {
         buttonLayout.setJustifyContentMode(JustifyContentMode.CENTER);
 
         add(buttonLayout);
+    }
+
+    /**
+     * Function for handling register button click
+     * @param event
+     */
+    private void registerButtonClick(ClickEvent<Button> event) {
+        RegisterWindow registerWindow = new RegisterWindow();
+        add(registerWindow.main_dialog);
+        registerWindow.main_dialog.open();
     }
 
     /**

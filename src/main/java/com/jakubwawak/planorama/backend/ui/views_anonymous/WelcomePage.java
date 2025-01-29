@@ -60,7 +60,7 @@ public class WelcomePage extends VerticalLayout {
         main_layout.setJustifyContentMode(JustifyContentMode.CENTER);
         main_layout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         main_layout.getStyle().set("text-align", "center");
-        main_layout.add(new H1("Planorama."));
+        main_layout.add(new H1("planorama."));
         main_layout.add(loginComponent);
         main_layout.add(loginButton);
 
