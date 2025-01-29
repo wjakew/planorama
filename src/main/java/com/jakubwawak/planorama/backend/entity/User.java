@@ -60,8 +60,16 @@ public class User {
         this.id = id;
     }
 
+    public ObjectId getId() {
+        return id;
+    }
+
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setAdmin() {
@@ -126,7 +134,8 @@ public class User {
     public boolean checkPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(passwordSalt.getBytes(StandardCharsets.UTF_8));
+            // Use the salt stored in the user object
+            md.update(Base64.getDecoder().decode(passwordSalt)); // Decode the stored salt
             byte[] hashedPassword = md.digest(password.getBytes(StandardCharsets.UTF_8));
             return Arrays.equals(hashedPassword, Base64.getDecoder().decode(this.password));
         } catch (NoSuchAlgorithmException e) {

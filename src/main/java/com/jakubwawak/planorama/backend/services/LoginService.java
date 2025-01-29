@@ -5,7 +5,12 @@
  */
 package com.jakubwawak.planorama.backend.services;
 
+import com.jakubwawak.planorama.PlanoramaApplication;
 import com.jakubwawak.planorama.backend.database_service.DatabaseUser;
+import com.jakubwawak.planorama.backend.entity.User;
+import com.vaadin.flow.server.VaadinSession;
+
+import oshi.util.tuples.Pair;
 
 /**
  * Service for maintaining login and session
@@ -20,5 +25,49 @@ public class LoginService {
     public LoginService() {
         databaseUser = new DatabaseUser();
     }
+
+    /**
+     * Login user service function
+     * @param email
+     * @param password
+     * @return int
+     * 1 - success
+     * 0 - user not found
+     * -1 - wrong password
+     * -2 - failed to create session
+     */
+    public Pair<Integer, String> loginUser(String email, String password) {
+        // verify if user exists with email
+        if ( databaseUser.isUserRegistered(email) ) {
+            // verify if password is correct
+            User user = databaseUser.loginUser(email, password);
+            if (user != null) {
+                // create session
+                String session_id = PlanoramaApplication.database.createSession(user);
+                if ( session_id != null ) {
+                    VaadinSession.getCurrent().setAttribute("planorama_session_cookie", session_id);
+                    PlanoramaApplication.database.log("USER-LOGIN-SUCCESS", "User logged ()"+user.getEmail()+") in with session id: " + session_id);
+                    return new Pair<>(1, session_id);
+                } else {
+                    PlanoramaApplication.database.log("USER-LOGIN-FAILED", "Failed to create session");
+                    return new Pair<>(-2, null);
+                }
+            } else {
+                // wrong password
+                return new Pair<>(-1, null);
+            }
+        }
+        // user not found
+        return new Pair<>(0, null);
+    }
+
+    /**
+     * Function for getting user by session id
+     * @param session_id
+     * @return
+     */
+    public User getUserBySessionId(String session_id) {
+        return databaseUser.getUserBySessionId(session_id);
+    }   
 
 }

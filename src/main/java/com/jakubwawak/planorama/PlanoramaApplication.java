@@ -13,6 +13,7 @@ import com.jakubwawak.planorama.backend.database_service.Database;
 import com.jakubwawak.planorama.backend.database_service.DatabaseUser;
 import com.jakubwawak.planorama.maintanance.ConsoleColors;
 import com.jakubwawak.planorama.maintanance.Properties;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.spring.annotation.EnableVaadin;
 import com.vaadin.flow.theme.Theme;
@@ -79,12 +80,23 @@ public class PlanoramaApplication extends SpringBootServletInitializer implement
 		}
 	}
 
+	/**
+	 * Function for showing header
+	 */
 	static void showHeader() {
 		System.out.println(ConsoleColors.BLUE + "Planorama" + ConsoleColors.RESET);
 		System.out.println(ConsoleColors.BLUE + "by Jakub Wawak" + ConsoleColors.RESET);
 		System.out.println(ConsoleColors.BLUE + "kubawawak@gmail.com" + ConsoleColors.RESET);
 		System.out.println(ConsoleColors.BLUE + "all rights reserved" + ConsoleColors.RESET);
 		System.out.println(ConsoleColors.BLUE + "version " + version + ConsoleColors.RESET);
+	}
+
+	/**
+	 * Function for showing notification
+	 * @param message
+	 */
+	public static void showNotification(String message) {
+		Notification.show(message);
 	}
 
 }

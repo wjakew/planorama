@@ -81,9 +81,11 @@ public class WelcomePage extends VerticalLayout {
         if (loginComponent.isVisible()) {
             loginButton.setText("Access Planorama");
             loginComponent.setVisible(false);
+            loginButton.addClassName("default-button");
         } else {
             loginButton.setText("Return");
             loginComponent.setVisible(true);
+            loginButton.addClassName("secondary-button");
         }
     }
 }

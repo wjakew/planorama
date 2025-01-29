@@ -5,12 +5,14 @@
  */
 package com.jakubwawak.planorama.backend.database_service;
 
+import com.jakubwawak.planorama.backend.entity.User;
 import com.jakubwawak.planorama.maintanance.ConsoleColors;
 import com.mongodb.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.InsertOneResult;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -18,10 +20,15 @@ import org.bson.BsonDocument;
 import org.bson.BsonInt64;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
+
+import static com.mongodb.client.model.Filters.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Object for connecting to MongoDB database
@@ -119,6 +126,51 @@ public class Database {
     }
 
     /**
+     * Function for creating session
+     * 
+     * @param user
+     * @return String
+     */
+    public String createSession(User user){
+        String session_id = UUID.randomUUID().toString();
+        while (getCollection("sessions").find(eq("session_id", session_id)).first() != null) {
+            session_id = UUID.randomUUID().toString();
+        }
+        Document document = new Document();
+        document.put("session_id", session_id);
+        document.put("user_id", user.getId());
+        document.put("created_at", LocalDateTime.now(ZoneId.of("Europe/Warsaw")).toString());
+        document.put("active", true);
+        document.put("last_activity", LocalDateTime.now(ZoneId.of("Europe/Warsaw")).toString());
+
+        if ( insert("sessions", document) == 1 ) {
+            manageUserSessions(user.getId());
+            return session_id;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Function to manage user sessions
+     * Checks if a user has 3 sessions and removes the oldest if so.
+     * 
+     * @param userId the ID of the user
+     */
+    void manageUserSessions(ObjectId userId) {
+        List<Document> sessions = getCollection("sessions").find(eq("user_id", userId)).sort(Sorts.ascending("created_at")).into(new ArrayList<>());
+        if (sessions.size() >= 3) {
+            // Remove the oldest session
+            Document oldestSession = sessions.get(0);
+            getCollection("sessions").deleteOne(eq("session_id", oldestSession.getString("session_id")));
+            log("SESSION-MANAGEMENT", "Removed oldest session for user (" + userId + ")");
+        }
+        else{
+            log("SESSION-MANAGEMENT", "No sessions to remove for user (" + userId + "), amount of sessions: " + sessions.size());
+        }
+    }
+
+    /**
      * Function for story log data
      * 
      * @param log_category
@@ -142,6 +194,17 @@ public class Database {
                     + LocalDateTime.now(ZoneId.of("Europe/Warsaw")).toString() + ") - " + log_text + "]"
                     + ConsoleColors.RESET);
         }
-        // TODO inserting log to database
+        // insert log to database
+        try{
+            if ( connected ) {
+                Document document = new Document();
+                document.put("log_category", log_category);
+                document.put("log_text", log_text);
+                document.put("log_date", LocalDateTime.now(ZoneId.of("Europe/Warsaw")).toString());
+                getCollection("logs").insertOne(document);
+            }
+        } catch (Exception e) {
+            log("DB-LOG-ERROR", "Failed to insert log to database (" + e.getMessage() + ")");
+        }
     }
 }

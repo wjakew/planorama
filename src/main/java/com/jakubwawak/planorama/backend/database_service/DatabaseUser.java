@@ -10,6 +10,8 @@ import com.jakubwawak.planorama.backend.entity.User;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.InsertOneResult;
 import org.bson.Document;
+import org.bson.types.ObjectId;
+
 import static com.mongodb.client.model.Filters.eq;
 
 /**
@@ -97,6 +99,71 @@ public class DatabaseUser {
             return 1;
         } else {
             return 0;
+        }
+    }
+
+    /**
+     * Function for logging in user
+     * 
+     * @param email
+     * @param password
+     * @return User
+     */
+    public User loginUser(String email, String password) {
+        try{
+            Document document = database.getCollection("application_users").find(eq("email", email)).first();
+            if (document != null) {
+                User user = new User(document);
+                if (user.checkPassword(password)) {
+                    database.log("USER-LOGIN-SUCCESS", "User logged in");
+                    return user;
+                } else {
+                    database.log("USER-LOGIN-FAILED", "Wrong password");
+                    return null;
+                }
+            } else {
+                database.log("USER-LOGIN-FAILED", "User not found");
+                return null;
+            }
+        } catch (Exception e) {
+            database.log("USER-LOGIN-FAILED", e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Function for getting user by id
+     * @param id
+     * @return
+     */
+    public User getUserById(ObjectId id) {
+        Document document = database.getCollection("application_users").find(eq("_id", id)).first();
+        if (document != null) {
+            return new User(document);
+        } else {
+            database.log("USER-GET-BY-ID", "User not found (id: " + id + ")");
+            return null;
+        }
+    }
+
+    /**
+     * Function for getting user by session id
+     * @param session_id
+     * @return
+     */
+    public User getUserBySessionId(String session_id) {
+        Document document = database.getCollection("sessions").find(eq("session_id", session_id)).first();
+        if (document != null) {
+            if (document.getBoolean("active")) {
+                database.log("USER-GET-BY-SESSION-ID", "Session used by user (" + document.getObjectId("user_id") + ") (session_id: " + session_id + ")");
+                return getUserById(document.getObjectId("user_id"));
+            } else {
+                database.log("USER-GET-BY-SESSION-ID", "Session not active (session_id: " + session_id + ")");
+                return null;
+            }
+        } else {
+            database.log("USER-GET-BY-SESSION-ID", "Session not found (session_id: " + session_id + ")");
+            return null;
         }
     }
 }
