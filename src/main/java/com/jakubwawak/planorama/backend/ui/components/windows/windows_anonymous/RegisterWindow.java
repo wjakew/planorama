@@ -63,7 +63,7 @@ public class RegisterWindow {
         password_field.addClassName("default-input");
         password_field.setWidth("100%");
         password_field.setMaxLength(150);
-        
+
         password_repeat_field = new PasswordField("Repeat password");
         password_repeat_field.addClassName("default-input");
         password_repeat_field.setWidth("100%");
@@ -102,22 +102,40 @@ public class RegisterWindow {
      */
     private void registerButtonClick(ClickEvent<Button> event) {
         RegistrationService registrationService = new RegistrationService();
-        if ( email_field.getValue().isEmpty() || password_field.getValue().isEmpty() || password_repeat_field.getValue().isEmpty() ) {
+        String email = email_field.getValue();
+        if (email.isEmpty() || password_field.getValue().isEmpty() || password_repeat_field.getValue().isEmpty()) {
+            PlanoramaApplication.showNotification("Please fill all fields");
             return;
         }
-        if ( password_field.getValue().equals(password_repeat_field.getValue()) ) {
-            int ans = registrationService.registerUser(email_field.getValue(), password_field.getValue());
-            if ( ans == 1 ) {
+        
+        // Validate email format
+        if (!isValidEmail(email)) {
+            PlanoramaApplication.showNotification("Please enter a valid email address");
+            return;
+        }
+
+        if (password_field.getValue().equals(password_repeat_field.getValue())) {
+            int ans = registrationService.registerUser(email, password_field.getValue());
+            if (ans == 1) {
                 PlanoramaApplication.showNotification("User registered successfully");
                 main_dialog.close();
-            } else if ( ans == 0 ) {
+            } else if (ans == 0) {
                 PlanoramaApplication.showNotification("User already registered");
             } else {
                 PlanoramaApplication.showNotification("Failed to register user");
             }
-        }
-        else{
+        } else {
             PlanoramaApplication.showNotification("Passwords do not match");
         }
+    }
+
+    /**
+     * Function to validate email format
+     * @param email
+     * @return boolean
+     */
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        return email.matches(emailRegex);
     }
 }

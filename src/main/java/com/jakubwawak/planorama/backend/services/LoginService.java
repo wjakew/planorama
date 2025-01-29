@@ -62,6 +62,22 @@ public class LoginService {
     }
 
     /**
+     * Logout user service function
+     * @param user
+     * @return int
+     * 1 - success
+     * 0 - user not found
+     */
+    public int logoutUser(User user){
+        if (user != null){
+            String session_id = VaadinSession.getCurrent().getAttribute("planorama_session_cookie").toString();
+            PlanoramaApplication.database.removeSession(session_id);
+            return 1;
+        }
+        return 0;
+    }
+
+    /**
      * Function for getting user by session id
      * @param session_id
      * @return

@@ -13,7 +13,9 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.internal.bulk.DeleteRequest;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import org.bson.BsonDocument;
@@ -149,6 +151,22 @@ public class Database {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Function for removing session
+     * @param session_id
+     * @return int
+     * 1 - success
+     * 0 - session not found
+     */
+    public int removeSession(String session_id){
+        DeleteResult result = getCollection("sessions").deleteOne(eq("session_id", session_id));
+        if (result.getDeletedCount() == 1){
+            log("SESSION-REMOVE", "Session removed (" + session_id + ")");
+            return 1;
+        }
+        return 0;
     }
 
     /**

@@ -71,6 +71,17 @@
     color: white;
     font-size: 5rem;
 }
+/* -------------header component */
+.header-component{
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    border: 1px solid rgb(255, 255, 255);
+}
+.header-component h6{
+    color: white;
+    font-size: 0.75rem;
+}
 /* page styles */
 
 /* -------------welcome page */
@@ -79,6 +90,33 @@
     background-size: 200% 200%;
     animation: spinning 40s linear infinite;
 }
+.welcome-page h1 {
+    font-family: 'planorama_font';
+    color: white;
+    font-size: 5rem;
+}
+.welcome-page h6 {
+    color: white;
+    font-size: 0.75rem;
+}
+/* -------------dashboard page */
+.dashboard-page {
+    background: linear-gradient(135deg, rgb(60, 60, 60), black);
+    background-size: 200% 200%;
+    animation: spinning 40s linear infinite;
+}
+.dashboard-page h1 {
+    font-family: 'planorama_font';
+    color: white;
+    font-size: 5rem;
+}
+.dashboard-page h6 {
+    color: white;
+    font-size: 0.75rem;
+}
+
+
+/* animations */
 @keyframes spinning {
     0% {
         background-position: 0% 50%;
@@ -91,13 +129,4 @@
     100% {
         background-position: 0% 50%;
     }
-}
-.welcome-page h1 {
-    font-family: 'planorama_font';
-    color: white;
-    font-size: 5rem;
-}
-.welcome-page h6 {
-    color: white;
-    font-size: 0.75rem;
 }

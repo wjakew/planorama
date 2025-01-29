@@ -84,9 +84,14 @@ public class LoginComponent extends VerticalLayout {
      * @param event
      */
     private void registerButtonClick(ClickEvent<Button> event) {
-        RegisterWindow registerWindow = new RegisterWindow();
-        add(registerWindow.main_dialog);
-        registerWindow.main_dialog.open();
+        if ( PlanoramaApplication.accountCreationEnabled == 1 ) {
+            RegisterWindow registerWindow = new RegisterWindow();
+            add(registerWindow.main_dialog);
+            registerWindow.main_dialog.open();
+        }
+        else{
+            PlanoramaApplication.showNotification("Account creation is disabled, please contact support.");
+        }
     }
 
     /**
