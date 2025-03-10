@@ -39,6 +39,11 @@ public class AdminPage extends VerticalLayout {
      */
     public AdminPage() {
         addClassName("admin-page");
+        
+        setSizeFull();
+        setAlignItems(Alignment.CENTER);
+        setJustifyContentMode(JustifyContentMode.CENTER);
+
         String session_id = VaadinSession.getCurrent().getAttribute("planorama_session_cookie").toString();
         if (session_id == null) {
             add(new H1("Session expired, please login again."));
@@ -78,5 +83,21 @@ public class AdminPage extends VerticalLayout {
         // create layout for logged user
         headerComponent = new HeaderComponent(user);
         add(headerComponent);
+
+        if ( !PlanoramaApplication.database.isAdminSession(VaadinSession.getCurrent().getAttribute("planorama_session_cookie").toString()) ) {
+            add(new H1("You are not authorized to access this page."));
+            add(back_button);
+        }
+        else{
+            prepareAdminLayout();
+        }
+    }
+
+    /**
+     * Function for preparing admin layout
+     */
+    void prepareAdminLayout(){
+        add(new H1("Admin page"));
+        add(back_button);
     }
 }

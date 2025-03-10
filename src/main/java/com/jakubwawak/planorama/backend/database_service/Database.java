@@ -182,6 +182,23 @@ public class Database {
     }
 
     /**
+     * Function to verify if a given session cookie belongs to an admin user
+     * 
+     * @param session_id the session cookie to verify
+     * @return boolean true if the user is an admin, false otherwise
+     */
+    public boolean isAdminSession(String session_id) {
+        Document session = getCollection("sessions").find(eq("session_id", session_id)).first();
+        if (session != null) {
+            ObjectId userId = session.getObjectId("user_id");
+            DatabaseUser databaseUser = new DatabaseUser();
+            User user = databaseUser.getUserById(userId); // Assuming a method to get User by ID exists
+            return user != null && user.isAdmin();
+        }
+        return false;
+    }
+
+    /**
      * Function for removing session
      * @param session_id
      * @return int

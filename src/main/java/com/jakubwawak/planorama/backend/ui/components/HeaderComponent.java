@@ -11,8 +11,6 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.server.VaadinSession;
-import com.jakubwawak.planorama.PlanoramaApplication;
 import com.jakubwawak.planorama.backend.entity.User;
 import com.jakubwawak.planorama.backend.services.LoginService;
 import com.jakubwawak.planorama.backend.ui.components.windows.windows_logged.SettingsWindow;
@@ -78,8 +76,9 @@ public class HeaderComponent extends HorizontalLayout{
         left_layout.setAlignItems(Alignment.CENTER);
         left_layout.setWidth("80%");
 
-        H6 header = new H6("Welcome, " + user.getEmail()+ "in planorama.");
+        H6 header = new H6("Welcome, " + user.getEmail()+ " in planorama.");
         header.getStyle().set("margin","0 10px");
+        header.getStyle().set("color", "black");
         
         left_layout.add(header);
 
