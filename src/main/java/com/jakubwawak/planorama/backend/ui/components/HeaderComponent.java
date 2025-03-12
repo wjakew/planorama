@@ -7,12 +7,14 @@ package com.jakubwawak.planorama.backend.ui.components;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H6;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.UI;
 import com.jakubwawak.planorama.backend.entity.User;
 import com.jakubwawak.planorama.backend.services.LoginService;
+import com.jakubwawak.planorama.backend.ui.components.windows.windows_logged.CreateTaskWindow;
 import com.jakubwawak.planorama.backend.ui.components.windows.windows_logged.SettingsWindow;
 
 
@@ -21,7 +23,7 @@ import com.jakubwawak.planorama.backend.ui.components.windows.windows_logged.Set
  */
 public class HeaderComponent extends HorizontalLayout{
 
-    Button logout_button, settings_button;
+    Button logout_button, settings_button, addTask_button;
     User user;
     
     /**
@@ -43,12 +45,15 @@ public class HeaderComponent extends HorizontalLayout{
      * Function for preparing components
      */
     void prepare_components() {
-        logout_button = new Button("Logout");
+        logout_button = new Button("Logout",VaadinIcon.SIGN_OUT.create());
 
         logout_button.addClassName("default-button");
 
-        settings_button = new Button("Settings");
+        settings_button = new Button("Settings",VaadinIcon.COG.create());
         settings_button.addClassName("secondary-button");
+
+        addTask_button = new Button("New",VaadinIcon.PLUS.create());
+        addTask_button.addClassName("secondary-button");
 
         logout_button.addClickListener(e -> {
             LoginService loginService = new LoginService();
@@ -62,8 +67,15 @@ public class HeaderComponent extends HorizontalLayout{
             settingsWindow.main_dialog.open();
         });
 
+        addTask_button.addClickListener(e -> {
+            CreateTaskWindow createTaskWindow = new CreateTaskWindow(null);
+            add(createTaskWindow.main_dialog);
+            createTaskWindow.main_dialog.open();
+        });
+
         logout_button.getStyle().set("margin", "0 10px");
         settings_button.getStyle().set("margin", "0 10px");
+        addTask_button.getStyle().set("margin", "0 10px");
     }
 
     /**
@@ -86,7 +98,7 @@ public class HeaderComponent extends HorizontalLayout{
         right_layout.setSizeFull();
         right_layout.setJustifyContentMode(JustifyContentMode.END);
         right_layout.setAlignItems(FlexComponent.Alignment.CENTER);
-        right_layout.add(settings_button, logout_button);
+        right_layout.add(addTask_button,settings_button, logout_button);
         right_layout.setWidth("80%");
 
         add(left_layout, right_layout);
